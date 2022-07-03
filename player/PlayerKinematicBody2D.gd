@@ -1,8 +1,5 @@
 extends KinematicBody2D
 
-export var gravity : float
-
-export var jump_speed : float
 export var speed : float
 
 var horizontal_speed : float
@@ -10,34 +7,26 @@ var vertical_speed : float
 
 var direction : float
 
-func move () :
-	move_and_collide(Vector2(horizontal_speed, 0))
-	move_and_collide(Vector2(0, vertical_speed))
-	pass
+func add_vertical_speed (vertical_speed : float):
+	self.vertical_speed += vertical_speed
+
+func get_horizontal_speed ():
+	return horizontal_speed
+
+func get_vertical_speed ():
+	return vertical_speed
+
+func set_horizontal_speed (horizontal_speed : float):
+	self.horizontal_speed = horizontal_speed
+
+func set_vertical_speed (vertical_speed : float) :
+	self.vertical_speed = vertical_speed
 
 func _process(delta):
 	horizontal_speed = speed * delta * direction
-	move()
-	gravity(delta)
+	move_and_collide(Vector2(horizontal_speed, 0))
+	move_and_collide(Vector2(0, vertical_speed))
 
-func gravity (delta) :
-	if(!$RayCast2D.is_grounded):
-		vertical_speed += gravity * delta
-		vertical_speed = clamp(vertical_speed, -1000, 50)
-		pass
-	pass
-
+# Esta funcion podria estar en otro script
 func _on_Player_move(direction):
 	self.direction = direction
-
-func _on_Player_jump():
-	print("Se ha intentado saltar...")
-	if(!$RayCast2D.is_grounded) :
-		return
-	print("Se ha aplicado una fuerza de salto")
-	vertical_speed -= jump_speed
-
-
-func _on_RayCast2D_grounded():
-	vertical_speed = 0
-	pass # Replace with function body.
